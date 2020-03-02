@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@id/navigation_home">
+
+    <fragment
+        android:id="@+id/navigation_home"
+        android:name="com.example.prototype.ui.Calender.CalenderFragment"
+        android:label="@string/title_home"
+        tools:layout="@layout/fragment_calender" >
+        <action
+            android:id="@+id/action_navigation_home_to_calenderDetailFragment"
+            app:destination="@id/calenderDetailFragment"
+            app:enterAnim="@anim/fragment_fade_enter"
+            app:exitAnim="@anim/fragment_fade_exit"
+            app:popEnterAnim="@anim/fragment_close_enter"
+            app:popExitAnim="@anim/fragment_close_enter"
+            app:popUpTo="@+id/navigation_home" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_dashboard"
+        android:name="com.example.prototype.ui.ToDO.ToDoFragment"
+        android:label="@string/title_dashboard"
+        tools:layout="@layout/fragment_todo" />
+
+    <fragment
+        android:id="@+id/navigation_notifications"
+        android:name="com.example.prototype.ui.notifications.NotificationsFragment"
+        android:label="@string/title_notifications"
+        tools:layout="@layout/fragment_notifications" />
+    <fragment
+        android:id="@+id/calenderDetailFragment"
+        android:name="com.example.prototype.ui.Calender.CalenderDetailFragment"
+        android:label="fragment_calender_detail"
+        tools:layout="@layout/fragment_calender_detail" >
+        <argument
+            android:name="year"
+            app:argType="integer" />
+        <argument
+            android:name="month"
+            app:argType="integer" />
+        <argument
+            android:name="day"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_calenderDetailFragment_to_editPlan"
+            app:destination="@id/editPlan"
+            app:enterAnim="@anim/fragment_fade_enter"
+            app:exitAnim="@anim/fragment_fade_exit"
+            app:popUpTo="@+id/calenderDetailFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/editPlan"
+        android:name="com.example.prototype.EditPlan"
+        android:label="fragment_edit_plan"
+        tools:layout="@layout/fragment_edit_plan" />
+</navigation>
