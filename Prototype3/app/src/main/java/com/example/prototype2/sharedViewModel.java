@@ -8,12 +8,17 @@ import androidx.lifecycle.LiveData;
 import com.example.prototype2.Room.Plan;
 import com.example.prototype2.Room.PlanRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class sharedViewModel extends AndroidViewModel {
     // TODO: Implement the ViewModel
     private PlanRepository mRepository;
     private LiveData<List<Plan>> mAllPlans;
+
+    //ToDoのカテゴリ
+    public static List<String> category = new ArrayList<String>(); // カテゴリ
+
 
     public sharedViewModel (Application application) {
         super(application);

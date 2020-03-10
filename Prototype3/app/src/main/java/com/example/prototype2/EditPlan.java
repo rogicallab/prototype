@@ -1,5 +1,7 @@
 package com.example.prototype2;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -23,7 +25,9 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.prototype2.Room.Plan;
+import com.google.gson.Gson;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 
@@ -52,6 +56,7 @@ public class EditPlan extends Fragment {
     private EditText mTitle;
     private EditText mMemo;
     private Spinner cSpinner;
+
 
     private Spinner nSpinner;
     private String[] notificationItems = {
@@ -127,7 +132,30 @@ public class EditPlan extends Fragment {
         mMemo=view.findViewById(R.id.memoInput);
 
         //カテゴリーのスピナー
+        /**以下カテゴリをjsonからとってきてスピナーで表示するものです
+         *         //カテゴリーのスピナー
+         *         cSpinner=(Spinner)view.findViewById(R.id.spinner);
+         *　の部分を置き換えてください
+         * それとprivate String cItemを追加しました*/
+        SharedPreferences data = getActivity().getSharedPreferences("pref", Context.MODE_PRIVATE);
+        Gson gson = new Gson();
+        ArrayAdapter<ArrayList<String>>c_adapter=new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, gson.fromJson(data.getString("category",""), ArrayList.class));
+        c_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         cSpinner=(Spinner)view.findViewById(R.id.spinner);
+        cSpinner.setAdapter(c_adapter);
+        cSpinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            //アイテムが選択された
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Spinner spinner = (Spinner)adapterView;
+                category = (String)spinner.getSelectedItem();
+            }
+            //アイテムが選択されなかった
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
 
 
         ArrayAdapter<String>adapter=new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, notificationItems);

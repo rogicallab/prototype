@@ -101,6 +101,9 @@ dependencies {
 
     // Test helpers
     testImplementation "androidx.room:room-testing:$room_version"
+
+    //json
+    implementation 'com.google.code.gson:gson:2.2.4'
 }
 //apply plugin: "androidx.navigation.safeargs"
 
