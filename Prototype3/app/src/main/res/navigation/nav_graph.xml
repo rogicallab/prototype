@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/calendarFragment">
+
+    <fragment
+        android:id="@+id/calendarFragment"
+        android:name="com.example.prototype2.Calendar.CalendarFragment"
+        android:label="fragment_calendar"
+        tools:layout="@layout/fragment_calendar" >
+        <action
+            android:id="@+id/action_calendarFragment_to_calendarDetailFragment"
+            app:destination="@id/calendarDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/calendarDetailFragment"
+        android:name="com.example.prototype2.Calendar.CalendarDetailFragment"
+        android:label="fragment_calendar_detail"
+        tools:layout="@layout/fragment_calendar_detail" >
+        <argument
+            android:name="year"
+            app:argType="integer" />
+        <argument
+            android:name="month"
+            app:argType="integer" />
+        <argument
+            android:name="day"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_calendarDetailFragment_to_editPlan"
+            app:destination="@id/editPlan" />
+    </fragment>
+    <fragment
+        android:id="@+id/editPlan"
+        android:name="com.example.prototype2.EditPlan"
+        android:label="fragment_edit_plan"
+        tools:layout="@layout/fragment_edit_plan" >
+        <action
+            android:id="@+id/action_editPlan_to_calendarFragment"
+            app:destination="@id/calendarFragment" />
+    </fragment>
+</navigation>
