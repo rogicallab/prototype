@@ -18,6 +18,8 @@ public class PlanListAdapter  extends RecyclerView.Adapter<PlanListAdapter.PlanV
     private List<Plan> mPlans;
     private CalendarDetailFragment calendarDetailFragment;
     private View.OnClickListener listener;
+    private Plan current;
+    private int id;
     // Provide a reference to the views for each data item
 // Complex data items may need more than one view per item, and
 // you provide access to all the views for a data item in a view holder
@@ -53,7 +55,7 @@ public class PlanListAdapter  extends RecyclerView.Adapter<PlanListAdapter.PlanV
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
         if(mPlans!=null){
-            Plan current=mPlans.get(position);
+            current=mPlans.get(position);
             holder.planTitleView.setText(current.getPlanName());
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -65,6 +67,12 @@ public class PlanListAdapter  extends RecyclerView.Adapter<PlanListAdapter.PlanV
             holder.planTitleView.setText("No Plan");
         }
 
+    }
+    public Plan getCurrent(){
+        return current;
+    }
+    public int getCurrentId(){
+        return current.getId();
     }
     public void setOnItemClickListener(View.OnClickListener listener) {
         this.listener = listener;

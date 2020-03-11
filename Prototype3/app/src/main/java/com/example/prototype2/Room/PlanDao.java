@@ -18,6 +18,9 @@ public interface PlanDao {
     @Query("SELECT * FROM plan_table WHERE id IN (:userIds)")
     List<Plan> loadAllByIds(int[] userIds);
 
+    @Query("SELECT*FROM plan_table WHERE id=:id")
+    Plan findById(int id);
+
     @Query("SELECT * from plan_table ORDER BY plan_name ASC")
     LiveData<List<Plan>> getAlphabetizedWords();
 

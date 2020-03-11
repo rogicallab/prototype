@@ -3,7 +3,9 @@ package com.example.prototype2;
 import android.os.Build;
 import android.os.Bundle;
 
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
@@ -25,6 +27,8 @@ import android.widget.Toast;
 import com.example.prototype2.Room.Plan;
 
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Objects;
 
 
 /**
@@ -41,13 +45,11 @@ public class EditPlan extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private Integer id=null;
     private int judge;
     private sharedViewModel mPlanViewModel;
     private String category="";
     //カレンダーから渡された日付
-    private Integer cyear=-1;
-    private Integer cmonth=-1;
-    private Integer cday=-1;
 
     private EditText mTitle;
     private EditText mMemo;
@@ -62,8 +64,7 @@ public class EditPlan extends Fragment {
             "2日前",
             "1週間前"
 };
-    //通知の時間
-    private  String nItem="";
+    private int nSpinnerPlace=0;
     //設定する日付
     private DatePicker datePicker;
     private Integer year=-1;
@@ -75,8 +76,10 @@ public class EditPlan extends Fragment {
     private Integer minute=-1;
 
     private String plantitle="";
-    private String planmemo="";
+    private String memo="";
     int currentApiVersion=Build.VERSION.SDK_INT;
+    private String notification="";
+    private Plan currentPlan;
 
     public EditPlan() {
         // Required empty public constructor
@@ -99,7 +102,6 @@ public class EditPlan extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -108,40 +110,79 @@ public class EditPlan extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
         try{
-            judge=getArguments().getInt("access");
-            cyear= getArguments().getInt("year");
-            cmonth=getArguments().getInt("month");
-            cday=getArguments().getInt("day");}
-        catch (NullPointerException e){
+            judge=getArguments().getInt("access");//0:カレンダーからの作成、1:TODOからの作成、2:予定タップで予定変更
+//            plantitle=getArguments().getString("planName");
+            year= getArguments().getInt("year");
+            month=getArguments().getInt("month");
+            day=getArguments().getInt("day");
+//            hour=getArguments().getInt("hour");
+//            minute=getArguments().getInt("minute");
+//            notification=getArguments().getString("notification");
+//            memo=getArguments().getString("memo");
+            id=getArguments().getInt("id");
+            System.out.println(id+" IDdesu");
+            mPlanViewModel = new ViewModelProvider(this).get(sharedViewModel.class);
+//           Iterator it= mPlanViewModel.getPlanList().getValue().iterator();
+//
+//           while(it.hasNext()){
+//               Plan plan=(Plan)it.next();
+//               System.out.println(plan.getId()+plan.getPlanName());
+//           }
+            if(id!=null){
+                currentPlan=mPlanViewModel.findById(id);
+                plantitle=currentPlan.getPlanName();
+                category=currentPlan.getCategory();
+                year=currentPlan.getYear();
+                month=currentPlan.getMonth();
+                day=currentPlan.getDay();
+                hour=currentPlan.getHours();
+                minute=currentPlan.getMinute();
+                notification=currentPlan.getNotification();
+                memo=currentPlan.getMemo();
+
+            }
+            for(int i=0;i<notificationItems.length;i++){
+                if(notification==notificationItems[i]){
+                    nSpinnerPlace=i;
+                }
+            }
+
+        System.out.println(plantitle);
+            System.out.println(year+" "+month+" "+day);
+        }catch (NullPointerException e){
             System.out.println(e);
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.fragment_edit_plan, container, false);
-        mPlanViewModel = new ViewModelProvider(this).get(sharedViewModel.class);
-
+//        mPlanViewModel = new ViewModelProvider(this).get(sharedViewModel.class);
+        //タイトル
         mTitle=view.findViewById(R.id.titleInput);
+        mTitle.setText(plantitle);
+        //メモ
         mMemo=view.findViewById(R.id.memoInput);
+        mMemo.setText(memo);
 
         //カテゴリーのスピナー
         cSpinner=(Spinner)view.findViewById(R.id.spinner);
-
 
         ArrayAdapter<String>adapter=new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, notificationItems);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         //通知のスピナー
         nSpinner=(Spinner)view.findViewById(R.id.notifications);
         nSpinner.setAdapter(adapter);
+        nSpinner.setSelection(nSpinnerPlace);
         nSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             //　アイテムが選択された時
             @Override
             public void onItemSelected(AdapterView<?> parent,
                                        View view, int position, long id) {
                 Spinner spinner = (Spinner)parent;
-                nItem = (String)spinner.getSelectedItem();
+                notification = (String)spinner.getSelectedItem();
                 //textView.setText(item);
             }
 
@@ -157,11 +198,11 @@ public class EditPlan extends Fragment {
         Switch switch1=(Switch)view.findViewById(R.id.switch1);
 
         //カレンダーからのアクセスとTodoからのアクセスをif文で表示非表示分ける
-        if(cyear==-1&&cmonth==-1&&cday==-1){
+        if(year==-1&&month==-1&&day==-1){
             datePicker.setVisibility(View.GONE);
         }else{
             datePicker.setVisibility(View.VISIBLE);
-            datePicker.updateDate(cyear,cmonth,cday);
+            datePicker.updateDate(year,month,day);
             switch1.setChecked(isAdded());
         }
         //DatePicker表示非表示
@@ -179,6 +220,14 @@ public class EditPlan extends Fragment {
 
         //Timepicker
         timePicker=view.findViewById(R.id.timePicker);
+        if(hour==-1&&minute==-1){
+            timePicker.setVisibility(View.GONE);
+        }else{
+            timePicker.setVisibility(View.VISIBLE);
+            timePicker.setHour(hour);
+            timePicker.setMinute(minute);
+            switch1.setChecked(isAdded());
+        }
         timePicker.setVisibility(View.GONE);
         //TimePicker表示非表示
         Switch switch2=(Switch)view.findViewById(R.id.switch2);
@@ -192,7 +241,6 @@ public class EditPlan extends Fragment {
                 }
             }
         });
-
         //予定作成ボタン
         try {
             Button button = view.findViewById(R.id.createPlan);
@@ -219,9 +267,14 @@ public class EditPlan extends Fragment {
                             minute=timePicker.getCurrentMinute();
                             }
                         }
-                        planmemo=mMemo.getText().toString();
-                        Plan plan = new Plan(plantitle,category,year,month,day,hour,minute,planmemo);
-                        mPlanViewModel.insert(plan);
+                        memo=mMemo.getText().toString();
+                        if(judge!=2) {
+                            Plan plan = new Plan(plantitle, category, year, month, day, hour, minute, notification, memo);
+                            mPlanViewModel.insert(plan);
+                        }else{
+                            currentPlan.setAll(plantitle, category, year, month, day, hour, minute, notification, memo);
+                            mPlanViewModel.updatePlan(currentPlan);
+                        }
                     }
                     Navigation.findNavController(view).navigate(R.id.action_editPlan_to_calendarFragment);
                 }

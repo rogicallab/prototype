@@ -24,5 +24,6 @@ public class sharedViewModel extends AndroidViewModel {
     public void insert(Plan plan){mRepository.insert(plan);}
     public void deletePlan(Plan plan){mRepository.deletePlan(plan);}
     public void updatePlan(Plan plan){mRepository.updatePlan(plan);}
+    public Plan findById(int id){return mRepository.findById(id);}
 
 }

@@ -26,7 +26,7 @@ public abstract class PlanRoomDatabase extends RoomDatabase {
         if (INSTANCE == null) {
             synchronized (PlanRoomDatabase.class) {
                 if (INSTANCE == null) {
-                    INSTANCE = Room.databaseBuilder(context.getApplicationContext(),PlanRoomDatabase.class, "plan_database").addCallback(sRoomDatabaseCallback).build();
+                    INSTANCE = Room.databaseBuilder(context.getApplicationContext(),PlanRoomDatabase.class, "plan_database").allowMainThreadQueries().addCallback(sRoomDatabaseCallback).build();
                 }
             }
         }
@@ -65,8 +65,6 @@ public abstract class PlanRoomDatabase extends RoomDatabase {
                 PlanDao dao = INSTANCE.wordDao();
                 dao.deleteAll();
 
-                Plan plan=new Plan("鼻くそ","汚い",3000,48,12,33,77,"ホジホジホジホジホジホジ");
-                dao.insert(plan);
             });
         }
     };

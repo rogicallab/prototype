@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +26,7 @@ import com.example.prototype2.Room.Plan;
 import com.example.prototype2.sharedViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -115,7 +117,20 @@ public class CalendarDetailFragment extends Fragment {
         mAdapter.setOnItemClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Navigation.findNavController(view).navigate(R.id.action_calendarDetailFragment_to_editPlan);
+                Bundle bundle=new Bundle();
+//                Plan plan =mAdapter.getCurrent();
+//                bundle.putString("planName",plan.getPlanName());
+//                bundle.putInt("year",plan.getYear());
+//                bundle.putInt("month",plan.getMonth());
+//                bundle.putInt("day",plan.getDay());
+//                bundle.putInt("hour",plan.getHours());
+//                bundle.putInt("minute",plan.getMinute());
+//                bundle.putString("notification",plan.getNotification());
+//                bundle.putString("memo",plan.getMemo());
+                bundle.putInt("id",mAdapter.getCurrentId());
+                System.out.println(mAdapter.getCurrentId()+" IDです");
+                bundle.putInt("access",2);
+                Navigation.findNavController(view).navigate(R.id.action_calendarDetailFragment_to_editPlan,bundle);
             }
         });
 

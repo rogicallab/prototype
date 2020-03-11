@@ -59,5 +59,8 @@ public class PlanRepository {
             mPlanDao.updatePlan(plan);
         });
     }
+    public Plan findById(int id){
+        return mPlanDao.findById(id);
+    }
 
 }
