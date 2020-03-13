@@ -26,7 +26,7 @@ public abstract class PlanRoomDatabase extends RoomDatabase {
         if (INSTANCE == null) {
             synchronized (PlanRoomDatabase.class) {
                 if (INSTANCE == null) {
-                    INSTANCE = Room.databaseBuilder(context.getApplicationContext(),PlanRoomDatabase.class, "plan_database").allowMainThreadQueries().addCallback(sRoomDatabaseCallback).build();
+                    INSTANCE = Room.databaseBuilder(context.getApplicationContext(),PlanRoomDatabase.class, "plan_database").addCallback(sRoomDatabaseCallback).build();
                 }
             }
         }

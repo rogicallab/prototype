@@ -1,13 +1,12 @@
 package com.example.prototype2;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
@@ -27,11 +26,10 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.prototype2.Room.Plan;
-import com.google.gson.Gson;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Objects;
 
 
@@ -58,7 +56,6 @@ public class EditPlan extends Fragment {
     private EditText mTitle;
     private EditText mMemo;
     private Spinner cSpinner;
-
 
     private Spinner nSpinner;
     private String[] notificationItems = {
@@ -113,47 +110,30 @@ public class EditPlan extends Fragment {
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+        }System.out.println(hour+" "+minute);
         try{
             judge=getArguments().getInt("access");//0:カレンダーからの作成、1:TODOからの作成、2:予定タップで予定変更
-//            plantitle=getArguments().getString("planName");
-            year= getArguments().getInt("year");
-            month=getArguments().getInt("month");
-            day=getArguments().getInt("day");
-//            hour=getArguments().getInt("hour");
-//            minute=getArguments().getInt("minute");
-//            notification=getArguments().getString("notification");
-//            memo=getArguments().getString("memo");
-            id=getArguments().getInt("id");
-            System.out.println(id+" IDdesu");
-            mPlanViewModel = new ViewModelProvider(this).get(sharedViewModel.class);
-//           Iterator it= mPlanViewModel.getPlanList().getValue().iterator();
+            year = getArguments().getInt("year");
+            month = getArguments().getInt("month");
+            day = getArguments().getInt("day");
+            if(judge==2) {
+                plantitle = getArguments().getString("planName");
+                hour = getArguments().getInt("hour");
+                minute = getArguments().getInt("minute");
+                notification = getArguments().getString("notification");
+                memo = getArguments().getString("memo");
+                id = getArguments().getInt("id");
+                System.out.println(id + " IDdesu");
+                System.out.println(hour + " " + minute);
 //
-//           while(it.hasNext()){
-//               Plan plan=(Plan)it.next();
-//               System.out.println(plan.getId()+plan.getPlanName());
-//           }
-            if(id!=null){
-                currentPlan=mPlanViewModel.findById(id);
-                plantitle=currentPlan.getPlanName();
-                category=currentPlan.getCategory();
-                year=currentPlan.getYear();
-                month=currentPlan.getMonth();
-                day=currentPlan.getDay();
-                hour=currentPlan.getHours();
-                minute=currentPlan.getMinute();
-                notification=currentPlan.getNotification();
-                memo=currentPlan.getMemo();
-
-            }
-            for(int i=0;i<notificationItems.length;i++){
-                if(notification==notificationItems[i]){
-                    nSpinnerPlace=i;
+                for (int i = 0; i < notificationItems.length; i++) {
+                    if (notification.equals(notificationItems[i])) {
+                        nSpinnerPlace = i;
+                    }
                 }
             }
-
-        System.out.println(plantitle);
             System.out.println(year+" "+month+" "+day);
+        System.out.println(plantitle);
         }catch (NullPointerException e){
             System.out.println(e);
         }
@@ -164,7 +144,16 @@ public class EditPlan extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.fragment_edit_plan, container, false);
-//        mPlanViewModel = new ViewModelProvider(this).get(sharedViewModel.class);
+        mPlanViewModel = new ViewModelProvider(this).get(sharedViewModel.class);
+//        if(judge==2) {
+//            mPlanViewModel.findById(id).observe(getViewLifecycleOwner(), new Observer<Plan>() {
+//                @Override
+//                public void onChanged(Plan plan) {
+//                    setAll(plan, plan.getCategory(), plan.getYear(), plan.getMonth(), plan.getDay(), plan.getHours(), plan.getMinute(), plan.getNotification(), plan.getMemo());
+//                }
+//            });
+//        }
+
         //タイトル
         mTitle=view.findViewById(R.id.titleInput);
         mTitle.setText(plantitle);
@@ -173,30 +162,7 @@ public class EditPlan extends Fragment {
         mMemo.setText(memo);
 
         //カテゴリーのスピナー
-        /**以下カテゴリをjsonからとってきてスピナーで表示するものです
-         *         //カテゴリーのスピナー
-         *         cSpinner=(Spinner)view.findViewById(R.id.spinner);
-         *　の部分を置き換えてください
-         * それとprivate String cItemを追加しました*/
-        SharedPreferences data = getActivity().getSharedPreferences("pref", Context.MODE_PRIVATE);
-        Gson gson = new Gson();
-        ArrayAdapter<ArrayList<String>>c_adapter=new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, gson.fromJson(data.getString("category",""), ArrayList.class));
-        c_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         cSpinner=(Spinner)view.findViewById(R.id.spinner);
-        cSpinner.setAdapter(c_adapter);
-        cSpinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            //アイテムが選択された
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Spinner spinner = (Spinner)adapterView;
-                category = (String)spinner.getSelectedItem();
-            }
-            //アイテムが選択されなかった
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
 
         ArrayAdapter<String>adapter=new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, notificationItems);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -211,6 +177,7 @@ public class EditPlan extends Fragment {
                                        View view, int position, long id) {
                 Spinner spinner = (Spinner)parent;
                 notification = (String)spinner.getSelectedItem();
+                System.out.println(notification);
                 //textView.setText(item);
             }
 
@@ -245,30 +212,52 @@ public class EditPlan extends Fragment {
                         }
                     }
                 });
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            datePicker.setOnDateChangedListener(new DatePicker.OnDateChangedListener() {
+                @Override
+                public void onDateChanged(DatePicker view, int cyear, int monthOfYear, int dayOfMonth) {
+                    year=cyear;
+                    month=monthOfYear;
+                    day=dayOfMonth-1;
+                }
+            });
+        }
+        System.out.println(hour+" "+minute);
         //Timepicker
         timePicker=view.findViewById(R.id.timePicker);
+        //TimePicker表示非表示
+        Switch switch2=(Switch)view.findViewById(R.id.switch2);
         if(hour==-1&&minute==-1){
             timePicker.setVisibility(View.GONE);
         }else{
             timePicker.setVisibility(View.VISIBLE);
             timePicker.setHour(hour);
             timePicker.setMinute(minute);
-            switch1.setChecked(isAdded());
+            switch2.setChecked(isAdded());
         }
-        timePicker.setVisibility(View.GONE);
-        //TimePicker表示非表示
-        Switch switch2=(Switch)view.findViewById(R.id.switch2);
         switch2.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked){
                     timePicker.setVisibility(View.VISIBLE);
+                    timePicker.setHour(0);
+                    timePicker.setMinute(0);
                 }else{
                     timePicker.setVisibility(View.INVISIBLE);
+                    hour=-1;
+                    minute=-1;
+
                 }
             }
         });
+        timePicker.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
+            @Override
+            public void onTimeChanged(TimePicker view, int hourOfDay, int cminute) {
+                hour=hourOfDay-1;
+                minute=cminute;
+            }
+        });
+        
         //予定作成ボタン
         try {
             Button button = view.findViewById(R.id.createPlan);
@@ -282,25 +271,27 @@ public class EditPlan extends Fragment {
                         Toast.makeText(getContext(), R.string.empty_not_saved, Toast.LENGTH_LONG).show();
                     } else {
                         plantitle = mTitle.getText().toString();
-                        if(datePicker.isShown()){
-                        year=datePicker.getYear();
-                        month=datePicker.getMonth();
-                        day=datePicker.getDayOfMonth();}
-                        if(timePicker.isShown()){
-                        if(currentApiVersion > Build.VERSION_CODES.LOLLIPOP_MR1){
-                            hour=timePicker.getHour();
-                            minute=timePicker.getMinute();
-                        }else{
-                            hour=timePicker.getCurrentHour();
-                            minute=timePicker.getCurrentMinute();
-                            }
-                        }
+//                        if(datePicker.isShown()){
+//                        year=datePicker.getYear();
+//                        month=datePicker.getMonth();
+//                        day=datePicker.getDayOfMonth();}
+                        System.out.println(year+" "+month+" "+day);
+//                        if(timePicker.isShown()){
+//                        if(currentApiVersion > Build.VERSION_CODES.LOLLIPOP_MR1){
+//                            hour=timePicker.getHour();
+//                            minute=timePicker.getMinute();
+//                        }else{
+//                            hour=timePicker.getCurrentHour();
+//                            minute=timePicker.getCurrentMinute();
+//                            }
+//                        }
                         memo=mMemo.getText().toString();
                         if(judge!=2) {
                             Plan plan = new Plan(plantitle, category, year, month, day, hour, minute, notification, memo);
                             mPlanViewModel.insert(plan);
                         }else{
-                            currentPlan.setAll(plantitle, category, year, month, day, hour, minute, notification, memo);
+                            currentPlan=new Plan(plantitle, category, year, month, day, hour, minute, notification, memo);
+                            currentPlan.setId(id);
                             mPlanViewModel.updatePlan(currentPlan);
                         }
                     }
@@ -314,4 +305,15 @@ public class EditPlan extends Fragment {
         // Inflate the layout for this fragment
         return view;
     }
+//    public void setAll(Plan plan,String category,int year,int month,int day,int hour,int minute,String notification,String memo){
+//            this.currentPlan=plan;
+//            this.category=category;
+//            this.year=year;
+//            this.month=month;
+//            this.day=day;
+//            this.hour=hour;
+//            this.minute=minute;
+//            this.notification=notification;
+//            this.memo=memo;
+//    }
 }

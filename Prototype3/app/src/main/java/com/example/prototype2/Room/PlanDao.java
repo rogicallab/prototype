@@ -19,7 +19,7 @@ public interface PlanDao {
     List<Plan> loadAllByIds(int[] userIds);
 
     @Query("SELECT*FROM plan_table WHERE id=:id")
-    Plan findById(int id);
+    LiveData<Plan> findById(int id);
 
     @Query("SELECT * from plan_table ORDER BY plan_name ASC")
     LiveData<List<Plan>> getAlphabetizedWords();
@@ -39,4 +39,10 @@ public interface PlanDao {
 
     @Update
     void updatePlan(Plan plan);
+
+    @Query("SELECT*FROM plan_table WHERE year=:year AND month=:month AND day=:day")
+    LiveData<List<Plan>> getByDate(int year,int month,int day);
+
+    @Query("SELECT*FROM plan_table WHERE category =:category")
+    LiveData<List<Plan>>getByCategory(String category);
 }

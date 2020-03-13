@@ -118,15 +118,15 @@ public class CalendarDetailFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Bundle bundle=new Bundle();
-//                Plan plan =mAdapter.getCurrent();
-//                bundle.putString("planName",plan.getPlanName());
-//                bundle.putInt("year",plan.getYear());
-//                bundle.putInt("month",plan.getMonth());
-//                bundle.putInt("day",plan.getDay());
-//                bundle.putInt("hour",plan.getHours());
-//                bundle.putInt("minute",plan.getMinute());
-//                bundle.putString("notification",plan.getNotification());
-//                bundle.putString("memo",plan.getMemo());
+                Plan plan =mAdapter.getCurrent();
+                bundle.putString("planName",plan.getPlanName());
+                bundle.putInt("year",plan.getYear());
+                bundle.putInt("month",plan.getMonth());
+                bundle.putInt("day",plan.getDay());
+                bundle.putInt("hour",plan.getHours());
+                bundle.putInt("minute",plan.getMinute());
+                bundle.putString("notification",plan.getNotification());
+                bundle.putString("memo",plan.getMemo());
                 bundle.putInt("id",mAdapter.getCurrentId());
                 System.out.println(mAdapter.getCurrentId()+" IDです");
                 bundle.putInt("access",2);
@@ -134,25 +134,32 @@ public class CalendarDetailFragment extends Fragment {
             }
         });
 
+
 //        //ViewModelと対応づける
         mPlanViewModel = new ViewModelProvider(this).get(sharedViewModel.class);
 
-        mPlanViewModel.getPlanList().observe(getViewLifecycleOwner(), new Observer<List<Plan>>() {
+//        mPlanViewModel.getPlanList().observe(getViewLifecycleOwner(), new Observer<List<Plan>>() {
+//            @Override
+//            public void onChanged(@Nullable final List<Plan> plans) {
+//                // Update the cached copy of the words in the adapter.
+//                //日付ごとの予定を表示
+//                List<Plan> rPlans=plans;
+//                Iterator it = rPlans.iterator();
+//                while(it.hasNext()){
+//                    Plan plan=(Plan)it.next();
+//                    if (year == plan.getYear() && month == plan.getMonth() && day == plan.getDay()) {
+//                        } else {
+//                            System.out.println(plan.getPlanName() + " remove");
+//                            it.remove();
+//                        }
+//                }
+//                mAdapter.setPlans(rPlans);
+//            }
+//        });
+        mPlanViewModel.getByDate(year,month,day).observe(getViewLifecycleOwner(), new Observer<List<Plan>>() {
             @Override
-            public void onChanged(@Nullable final List<Plan> plans) {
-                // Update the cached copy of the words in the adapter.
-                //日付ごとの予定を表示
-                List<Plan> rPlans=plans;
-                Iterator it = rPlans.iterator();
-                while(it.hasNext()){
-                    Plan plan=(Plan)it.next();
-                    if (year == plan.getYear() && month == plan.getMonth() && day == plan.getDay()) {
-                        } else {
-                            System.out.println(plan.getPlanName() + " remove");
-                            it.remove();
-                        }
-                }
-                mAdapter.setPlans(rPlans);
+            public void onChanged(List<Plan> plans) {
+                mAdapter.setPlans(plans);
             }
         });
 
