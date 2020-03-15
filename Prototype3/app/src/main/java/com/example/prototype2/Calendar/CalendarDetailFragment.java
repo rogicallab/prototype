@@ -19,6 +19,7 @@ import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Adapter;
 import android.widget.TextView;
 
 import com.example.prototype2.R;
@@ -28,8 +29,10 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -137,25 +140,6 @@ public class CalendarDetailFragment extends Fragment {
 
 //        //ViewModelと対応づける
         mPlanViewModel = new ViewModelProvider(this).get(sharedViewModel.class);
-
-//        mPlanViewModel.getPlanList().observe(getViewLifecycleOwner(), new Observer<List<Plan>>() {
-//            @Override
-//            public void onChanged(@Nullable final List<Plan> plans) {
-//                // Update the cached copy of the words in the adapter.
-//                //日付ごとの予定を表示
-//                List<Plan> rPlans=plans;
-//                Iterator it = rPlans.iterator();
-//                while(it.hasNext()){
-//                    Plan plan=(Plan)it.next();
-//                    if (year == plan.getYear() && month == plan.getMonth() && day == plan.getDay()) {
-//                        } else {
-//                            System.out.println(plan.getPlanName() + " remove");
-//                            it.remove();
-//                        }
-//                }
-//                mAdapter.setPlans(rPlans);
-//            }
-//        });
         mPlanViewModel.getByDate(year,month,day).observe(getViewLifecycleOwner(), new Observer<List<Plan>>() {
             @Override
             public void onChanged(List<Plan> plans) {
@@ -207,6 +191,26 @@ public class CalendarDetailFragment extends Fragment {
                 Navigation.findNavController(view).navigate(R.id.action_calendarDetailFragment_to_editPlan,bundle);
             }
 
+        });
+        FloatingActionButton floatingActionButton=view.findViewById(R.id.floatingActionButton2);
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try{
+                    System.out.println("削除します");
+                    Iterator<Integer> it=mAdapter.getSelectedPosition().iterator();
+                    while(it.hasNext()){
+                        Integer posi=it.next();
+                        Plan dPlan=mAdapter.getPlanAtPosition(posi);
+                        mPlanViewModel.deletePlan(dPlan);
+                        myDataset.remove(posi);
+                        mAdapter.notifyItemRemoved(posi);
+                }
+            }catch (NullPointerException e){
+                System.out.println(e);
+            }
+                mAdapter.clearList();
+            }
         });
         return view;
     }
