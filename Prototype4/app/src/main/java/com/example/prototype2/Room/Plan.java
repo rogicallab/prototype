@@ -32,13 +32,10 @@ public class Plan {
     @ColumnInfo(name="minute")
     private Integer minute;
 
-    @ColumnInfo(name="notification")
-    private String notification;
-
     @ColumnInfo(name="memo")
     private String memo;
     //コンストラクタ
-    public Plan(String planName,String category,Integer year,Integer month,Integer day,Integer hours,Integer minute,String notification,String memo){
+    public Plan(String planName,String category,Integer year,Integer month,Integer day,Integer hours,Integer minute,String memo){
         this.planName=planName;
         this.category=category;
         this.year=year;
@@ -46,7 +43,6 @@ public class Plan {
         this.day=day;
         this.hours=hours;
         this.minute=minute;
-        this.notification=notification;
         this.memo=memo;
     }
 
@@ -88,8 +84,6 @@ public class Plan {
         return minute;
     }
 
-    public String getNotification(){return notification;}
-
     public String getMemo() {
         return memo;
     }
@@ -126,23 +120,7 @@ public class Plan {
         this.hours = hours;
     }
 
-    public void setNotification(String notification) {
-        this.notification = notification;
-    }
-
     public void setMemo(String memo) {
         this.memo = memo;
-    }
-
-    public void setAll(String planName,String category,Integer year,Integer month,Integer day,Integer hours,Integer minute,String notification,String memo){
-        this.planName=planName;
-        this.category=category;
-        this.year=year;
-        this.month=month;
-        this.day=day;
-        this.hours=hours;
-        this.minute=minute;
-        this.notification=notification;
-        this.memo=memo;
     }
 }

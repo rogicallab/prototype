@@ -4,7 +4,8 @@
     <item
         android:id="@+id/calendarFragment"
         android:icon="@drawable/calendar_icon"
-        android:title="カレンダー"/>
+        android:title="カレンダー"
+        />
 
     <item
         android:id="@+id/toDoFragment"

@@ -11,7 +11,7 @@
         android:layout_height="match_parent">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerViewC"
+            android:id="@+id/recyclerViewT"
             android:layout_width="423dp"
             android:layout_height="587dp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -26,7 +26,7 @@
             android:layout_height="65dp"
             android:text="TextView"
             android:textSize="30sp"
-            app:layout_constraintBottom_toTopOf="@+id/recyclerViewC"
+            app:layout_constraintBottom_toTopOf="@+id/recyclerViewT"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"

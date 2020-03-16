@@ -59,14 +59,5 @@ public class PlanRepository {
             mPlanDao.updatePlan(plan);
         });
     }
-    public LiveData<Plan> findById(int id){
-        return mPlanDao.findById(id);
-    }
-    public LiveData<List<Plan>> getByDate(int year,int month,int day){
-        return mPlanDao.getByDate(year, month, day);
-    }
-    public LiveData<List<Plan>>getByCategory(String category){
-        return mPlanDao.getByCategory(category);
-    }
 
 }

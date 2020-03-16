@@ -18,11 +18,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.example.prototype2.Calendar.PlanListAdapter;
 import com.example.prototype2.R;
 import com.example.prototype2.Room.Plan;
 import com.example.prototype2.sharedViewModel;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -50,6 +52,10 @@ public class ToDoContentsFragment extends Fragment {
     private RecyclerView.LayoutManager layoutManager;
     private sharedViewModel mPlanViewModel;
 
+
+
+
+
     public ToDoContentsFragment() {
         // Required empty public constructor
     }
@@ -60,7 +66,7 @@ public class ToDoContentsFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment ToDoContentsFragment.
+     * @return A new instance of fragment ToDoContents.
      */
     // TODO: Rename and change types and number of parameters
     public static ToDoContentsFragment newInstance(String param1, String param2) {
@@ -192,4 +198,5 @@ public class ToDoContentsFragment extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+
 }

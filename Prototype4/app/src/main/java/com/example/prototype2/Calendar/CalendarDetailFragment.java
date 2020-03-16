@@ -1,21 +1,17 @@
 package com.example.prototype2.Calendar;
 
-import android.icu.text.Edits;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,11 +22,9 @@ import com.example.prototype2.Room.Plan;
 import com.example.prototype2.sharedViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -100,7 +94,7 @@ public class CalendarDetailFragment extends Fragment {
         textView.setText(year + "年" + (1+month) + "月" + day + "日");
 
         //recycleView
-        recyclerView = (RecyclerView) view.findViewById(R.id.recyclerViewC);
+        recyclerView = (RecyclerView) view.findViewById(R.id.recyclerViewT);
 
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
@@ -117,49 +111,29 @@ public class CalendarDetailFragment extends Fragment {
         mAdapter.setOnItemClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Bundle bundle=new Bundle();
-                Plan plan =mAdapter.getCurrent();
-                bundle.putString("planName",plan.getPlanName());
-                bundle.putInt("year",plan.getYear());
-                bundle.putInt("month",plan.getMonth());
-                bundle.putInt("day",plan.getDay());
-                bundle.putInt("hour",plan.getHours());
-                bundle.putInt("minute",plan.getMinute());
-                bundle.putString("notification",plan.getNotification());
-                bundle.putString("memo",plan.getMemo());
-                bundle.putInt("id",mAdapter.getCurrentId());
-                System.out.println(mAdapter.getCurrentId()+" IDです");
-                bundle.putInt("access",2);
-                Navigation.findNavController(view).navigate(R.id.action_calendarDetailFragment_to_editPlan,bundle);
+                Navigation.findNavController(view).navigate(R.id.action_calendarDetailFragment_to_editPlan);
             }
         });
-
 
 //        //ViewModelと対応づける
         mPlanViewModel = new ViewModelProvider(this).get(sharedViewModel.class);
 
-//        mPlanViewModel.getPlanList().observe(getViewLifecycleOwner(), new Observer<List<Plan>>() {
-//            @Override
-//            public void onChanged(@Nullable final List<Plan> plans) {
-//                // Update the cached copy of the words in the adapter.
-//                //日付ごとの予定を表示
-//                List<Plan> rPlans=plans;
-//                Iterator it = rPlans.iterator();
-//                while(it.hasNext()){
-//                    Plan plan=(Plan)it.next();
-//                    if (year == plan.getYear() && month == plan.getMonth() && day == plan.getDay()) {
-//                        } else {
-//                            System.out.println(plan.getPlanName() + " remove");
-//                            it.remove();
-//                        }
-//                }
-//                mAdapter.setPlans(rPlans);
-//            }
-//        });
-        mPlanViewModel.getByDate(year,month,day).observe(getViewLifecycleOwner(), new Observer<List<Plan>>() {
+        mPlanViewModel.getPlanList().observe(getViewLifecycleOwner(), new Observer<List<Plan>>() {
             @Override
-            public void onChanged(List<Plan> plans) {
-                mAdapter.setPlans(plans);
+            public void onChanged(@Nullable final List<Plan> plans) {
+                // Update the cached copy of the words in the adapter.
+                //日付ごとの予定を表示
+                List<Plan> rPlans=plans;
+                Iterator it = rPlans.iterator();
+                while(it.hasNext()){
+                    Plan plan=(Plan)it.next();
+                    if (year == plan.getYear() && month == plan.getMonth() && day == plan.getDay()) {
+                        } else {
+                            System.out.println(plan.getPlanName() + " remove");
+                            it.remove();
+                        }
+                }
+                mAdapter.setPlans(rPlans);
             }
         });
 

@@ -65,6 +65,8 @@ public abstract class PlanRoomDatabase extends RoomDatabase {
                 PlanDao dao = INSTANCE.wordDao();
                 dao.deleteAll();
 
+                Plan plan=new Plan("鼻くそ","汚い",3000,48,12,33,77,"ホジホジホジホジホジホジ");
+                dao.insert(plan);
             });
         }
     };
