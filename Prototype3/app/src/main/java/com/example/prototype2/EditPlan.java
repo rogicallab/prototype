@@ -116,6 +116,7 @@ public class EditPlan extends Fragment {
             year = getArguments().getInt("year");
             month = getArguments().getInt("month");
             day = getArguments().getInt("day");
+            category=getArguments().getString("category");
             if(judge==2) {
                 plantitle = getArguments().getString("planName");
                 hour = getArguments().getInt("hour");
@@ -170,22 +171,6 @@ public class EditPlan extends Fragment {
         nSpinner=(Spinner)view.findViewById(R.id.notifications);
         nSpinner.setAdapter(adapter);
         nSpinner.setSelection(nSpinnerPlace);
-        nSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            //　アイテムが選択された時
-            @Override
-            public void onItemSelected(AdapterView<?> parent,
-                                       View view, int position, long id) {
-                Spinner spinner = (Spinner)parent;
-                notification = (String)spinner.getSelectedItem();
-                System.out.println(notification);
-                //textView.setText(item);
-            }
-
-            //　アイテムが選択されなかった
-            public void onNothingSelected(AdapterView<?> parent) {
-                //
-            }
-        });
         //DatePicker
         datePicker=view.findViewById(R.id.datePicker);
 
@@ -242,6 +227,8 @@ public class EditPlan extends Fragment {
                     timePicker.setVisibility(View.VISIBLE);
                     timePicker.setHour(0);
                     timePicker.setMinute(0);
+                    hour=0;
+                    minute=0;
                 }else{
                     timePicker.setVisibility(View.INVISIBLE);
                     hour=-1;
@@ -257,7 +244,27 @@ public class EditPlan extends Fragment {
                 minute=cminute;
             }
         });
-        
+        nSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            //　アイテムが選択された時
+            @Override
+            public void onItemSelected(AdapterView<?> parent,
+                                       View view, int position, long id) {
+                Spinner spinner = (Spinner)parent;
+                notification = (String)spinner.getSelectedItem();
+                System.out.println(notification);
+                if(position!=0){
+                switch2.setChecked(true);
+                }
+                //textView.setText(item);
+            }
+
+            //　アイテムが選択されなかった
+            public void onNothingSelected(AdapterView<?> parent) {
+                //
+            }
+        });
+
+
         //予定作成ボタン
         try {
             Button button = view.findViewById(R.id.createPlan);
@@ -268,7 +275,7 @@ public class EditPlan extends Fragment {
                 @Override
                 public void onClick(View v) {
                     if (TextUtils.isEmpty(mTitle.getText())) {//NullPointerException
-                        Toast.makeText(getContext(), R.string.empty_not_saved, Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext(),"タイトルが未入力です。", Toast.LENGTH_LONG).show();
                     } else {
                         plantitle = mTitle.getText().toString();
 //                        if(datePicker.isShown()){
@@ -286,16 +293,22 @@ public class EditPlan extends Fragment {
 //                            }
 //                        }
                         memo=mMemo.getText().toString();
-                        if(judge!=2) {
-                            Plan plan = new Plan(plantitle, category, year, month, day, hour, minute, notification, memo);
-                            mPlanViewModel.insert(plan);
-                        }else{
-                            currentPlan=new Plan(plantitle, category, year, month, day, hour, minute, notification, memo);
-                            currentPlan.setId(id);
-                            mPlanViewModel.updatePlan(currentPlan);
+                        if(nSpinner.getSelectedItemPosition()!=0&&hour==-1&&minute==-1){
+                            Toast.makeText(getContext(),"時間を選択してください",Toast.LENGTH_LONG).show();
+                            switch2.setChecked(true);
+                        }else {
+                            if (judge != 2) {
+                                Plan plan = new Plan(plantitle, category, year, month, day, hour, minute, notification, memo);
+                                mPlanViewModel.insert(plan);
+                            } else {
+                                currentPlan = new Plan(plantitle, category, year, month, day, hour, minute, notification, memo);
+                                currentPlan.setId(id);
+                                mPlanViewModel.updatePlan(currentPlan);
+                            }
+
+                            Navigation.findNavController(view).navigate(R.id.action_editPlan_to_calendarFragment);
                         }
                     }
-                    Navigation.findNavController(view).navigate(R.id.action_editPlan_to_calendarFragment);
                 }
 
             });
