@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/calendarFragment"
+        android:icon="@drawable/calendar_icon"
+        android:title="カレンダー"/>
+
+    <item
+        android:id="@+id/toDoFragment"
+        android:icon="@drawable/to_do_icon"
+        android:title="To-Do"/>
+
+    <item
+        android:id="@+id/settingFragment"
+        android:icon="@drawable/setting_icon"
+        android:title="設定"/>
+
+
+</menu>
