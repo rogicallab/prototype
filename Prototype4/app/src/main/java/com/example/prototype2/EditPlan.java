@@ -122,6 +122,14 @@ public class EditPlan extends Fragment {
             year = getArguments().getInt("year");
             month = getArguments().getInt("month");
             day = getArguments().getInt("day");}
+            if(judge==0){
+                category="カテゴリなし";
+                for(int i=0;i<clist.size();i++){
+                    if(category.equals(clist.get(i))){
+                        cSpinnerPlace=i;
+                    }
+                }
+            }
             if(judge==1||judge==2) {
                 category = getArguments().getString("category");
                 System.out.println(category + "  editPlanCategory");

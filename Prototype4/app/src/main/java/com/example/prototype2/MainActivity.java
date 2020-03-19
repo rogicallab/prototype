@@ -17,10 +17,13 @@ import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
 import androidx.preference.PreferenceScreen;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ClipData;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -46,14 +49,33 @@ public class MainActivity extends AppCompatActivity implements ToDoFragment.OnFr
 
     private int itemId ;
     private Fragment selectedFragment;
+    private BottomNavigationView bnv;
+    private Toolbar toolbar;
 
 
 
+
+    @SuppressLint("ResourceAsColor")
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        bnv=findViewById(R.id.nav_view);
+        toolbar=findViewById(R.id.toolbar);
+        SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        switch (defaultSharedPreferences.getString("preference_theme", getString(R.string.default_value_preference_theme))) {
+            case "light":
+                setTheme(R.style.AppTheme);
+                bnv.setBackgroundColor(R.color.colorAccent);
+                toolbar.setBackgroundColor(R.color.colorAccent);
+                break;
+            case "dark":
+                setTheme(R.style.AppThemeDark);
+                bnv.setBackgroundColor(R.color.colorBlack);
+                toolbar.setBackgroundColor(R.color.colorBlack);
+                break;
+        }
 
 
 //        // bottomNavigationViewのセッティング
@@ -150,6 +172,7 @@ public class MainActivity extends AppCompatActivity implements ToDoFragment.OnFr
         sharedViewModel.category.add("カテゴリ１");
         sharedViewModel.category.add("カテゴリ2");
         sharedViewModel.category.add("カテゴリ3");
+        sharedViewModel.category.add("カテゴリなし");
 
         SharedPreferences data = getSharedPreferences("pref", Context.MODE_PRIVATE);
         Gson gson = new Gson();
@@ -226,6 +249,8 @@ public class MainActivity extends AppCompatActivity implements ToDoFragment.OnFr
 
         }
     }
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    @SuppressLint("ResourceAsColor")
     @Override
     protected void onStart(){
         super.onStart();
@@ -234,9 +259,16 @@ public class MainActivity extends AppCompatActivity implements ToDoFragment.OnFr
         switch (defaultSharedPreferences.getString("preference_theme", getString(R.string.default_value_preference_theme))) {
             case "light":
                 setTheme(R.style.AppTheme);
+                bnv.setBackgroundColor(getColor(R.color.colorAccent));
+                toolbar.setBackgroundColor(getColor(R.color.colorAccent));
+                bnv.setItemTextColor(ColorStateList.valueOf(Color.BLACK));
                 break;
             case "dark":
                 setTheme(R.style.AppThemeDark);
+                bnv.setBackgroundColor(Color.BLACK);
+                toolbar.setBackgroundColor(Color.BLACK);
+                toolbar.setTitleTextColor(Color.WHITE);
+                bnv.setItemTextColor(ColorStateList.valueOf(getColor(R.color.colorP)));
                 break;
         }
 
