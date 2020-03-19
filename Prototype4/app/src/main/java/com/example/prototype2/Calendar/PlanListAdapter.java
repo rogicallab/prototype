@@ -1,16 +1,17 @@
-package com.example.prototype2.Calendar;
+package com.example.prototype2;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.TextView;
-import android.widget.Toast;
-import com.example.prototype2.Calendar.CalendarDetailFragment.*;
+
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.prototype2.R;
 import com.example.prototype2.Room.Plan;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class PlanListAdapter  extends RecyclerView.Adapter<PlanListAdapter.PlanViewHolder> {
@@ -18,15 +19,21 @@ public class PlanListAdapter  extends RecyclerView.Adapter<PlanListAdapter.PlanV
     private List<Plan> mPlans;
     private CalendarDetailFragment calendarDetailFragment;
     private View.OnClickListener listener;
+    private Plan current;
+    private int id;
+    private List<Plan>splans;
+    private List<Integer>positions=new ArrayList<>();
     // Provide a reference to the views for each data item
 // Complex data items may need more than one view per item, and
 // you provide access to all the views for a data item in a view holder
     public static class PlanViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
         public TextView planTitleView;
+        public CheckBox checkBox;
         public PlanViewHolder(View v) {
             super(v);
             planTitleView =(TextView)v.findViewById(R.id.title);
+            checkBox=(CheckBox) v.findViewById(R.id.delete);
         }
     }
     //private final LayoutInflater mInflater;
@@ -53,8 +60,34 @@ public class PlanListAdapter  extends RecyclerView.Adapter<PlanListAdapter.PlanV
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
         if(mPlans!=null){
-            Plan current=mPlans.get(position);
+            current=mPlans.get(position);
             holder.planTitleView.setText(current.getPlanName());
+            holder.checkBox.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    try {
+                        int i=0;
+                        System.out.println(current.getPlanName()+"削除要員 "+position);
+                        Iterator it =positions.iterator();
+                        while(it.hasNext()){
+                            Integer posi=(Integer)it.next();
+                            System.out.println(posi+"posi");
+                            if(posi==position){
+                                it.remove();
+                                System.out.println(posi+"削除");
+                                i++;
+                            }
+                        }
+                        if(i==0){
+                            positions.add((Integer)position);
+                            System.out.println(positions.size()+"追加後");}
+
+                    } catch (NullPointerException e) {
+                        System.out.println(e);
+                    }
+                }
+            });
+            if(positions.size()==0){holder.checkBox.setChecked(false);}
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -65,6 +98,13 @@ public class PlanListAdapter  extends RecyclerView.Adapter<PlanListAdapter.PlanV
             holder.planTitleView.setText("No Plan");
         }
 
+    }
+
+    public Plan getCurrent(){
+        return current;
+    }
+    public int getCurrentId(){
+        return current.getId();
     }
     public void setOnItemClickListener(View.OnClickListener listener) {
         this.listener = listener;
@@ -83,5 +123,13 @@ public class PlanListAdapter  extends RecyclerView.Adapter<PlanListAdapter.PlanV
     public int getItemCount() {
         return mPlans.size();
     }
+    public List<Integer>getSelectedPosition(){
+        return positions;
+    }
+    public void clearList(){
+        positions.clear();
+    }
+
+
 
 }

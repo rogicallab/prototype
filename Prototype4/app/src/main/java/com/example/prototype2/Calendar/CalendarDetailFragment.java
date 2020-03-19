@@ -1,9 +1,10 @@
-package com.example.prototype2.Calendar;
+package com.example.prototype2;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -17,10 +18,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.prototype2.R;
+import com.example.prototype2.Calendar.CalendarDetailFragmentArgs;
 import com.example.prototype2.Room.Plan;
-import com.example.prototype2.sharedViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -80,7 +81,7 @@ public class CalendarDetailFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-        year=CalendarDetailFragmentArgs.fromBundle(getArguments()).getYear();
+        year= CalendarDetailFragmentArgs.fromBundle(getArguments()).getYear();
         month=CalendarDetailFragmentArgs.fromBundle(getArguments()).getMonth();
         day=CalendarDetailFragmentArgs.fromBundle(getArguments()).getDay();
     }
@@ -90,11 +91,12 @@ public class CalendarDetailFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_calendar_detail, container, false);
 
+        int page = getArguments().getInt("page",0);
         TextView textView = view.findViewById(R.id.textView2);
         textView.setText(year + "年" + (1+month) + "月" + day + "日");
 
         //recycleView
-        recyclerView = (RecyclerView) view.findViewById(R.id.recyclerViewT);
+        recyclerView = (RecyclerView) view.findViewById(R.id.recyclerViewC);
 
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
@@ -111,31 +113,43 @@ public class CalendarDetailFragment extends Fragment {
         mAdapter.setOnItemClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Navigation.findNavController(view).navigate(R.id.action_calendarDetailFragment_to_editPlan);
+                Bundle bundle=new Bundle();
+                Plan plan =mAdapter.getCurrent();
+                bundle.putString("planName",plan.getPlanName());
+                bundle.putInt("year",plan.getYear());
+                bundle.putInt("month",plan.getMonth());
+                bundle.putInt("day",plan.getDay());
+                bundle.putInt("hour",plan.getHours());
+                bundle.putInt("minute",plan.getMinute());
+                bundle.putString("notification",plan.getNotification());
+                bundle.putString("memo",plan.getMemo());
+                bundle.putInt("id",mAdapter.getCurrentId());
+                System.out.println(mAdapter.getCurrentId()+" IDです");
+                bundle.putInt("access",2);
+                Navigation.findNavController(view).navigate(R.id.action_calendarDetailFragment_to_editPlan,bundle);
             }
         });
+
+
 
 //        //ViewModelと対応づける
         mPlanViewModel = new ViewModelProvider(this).get(sharedViewModel.class);
-
-        mPlanViewModel.getPlanList().observe(getViewLifecycleOwner(), new Observer<List<Plan>>() {
+        if(page!=-1){
+        SharedPreferences data = getActivity().getSharedPreferences("pref", Context.MODE_PRIVATE);
+        Gson gson = new Gson();
+        mPlanViewModel.getByCategory((String)gson.fromJson(data.getString("category",""), ArrayList.class).get(page-1)).observe(getViewLifecycleOwner(), new Observer<List<Plan>>() {
             @Override
-            public void onChanged(@Nullable final List<Plan> plans) {
-                // Update the cached copy of the words in the adapter.
-                //日付ごとの予定を表示
-                List<Plan> rPlans=plans;
-                Iterator it = rPlans.iterator();
-                while(it.hasNext()){
-                    Plan plan=(Plan)it.next();
-                    if (year == plan.getYear() && month == plan.getMonth() && day == plan.getDay()) {
-                        } else {
-                            System.out.println(plan.getPlanName() + " remove");
-                            it.remove();
-                        }
-                }
-                mAdapter.setPlans(rPlans);
+            public void onChanged(List<Plan> plans) {
+                mAdapter.setPlans(plans);
             }
-        });
+        });}else{
+            mPlanViewModel.getByDate(year,month,day).observe(getViewLifecycleOwner(), new Observer<List<Plan>>() {
+                @Override
+                public void onChanged(List<Plan> plans) {
+                    mAdapter.setPlans(plans);
+                }
+            });
+        }
 
 
         //スワイプなど
@@ -181,6 +195,26 @@ public class CalendarDetailFragment extends Fragment {
                 Navigation.findNavController(view).navigate(R.id.action_calendarDetailFragment_to_editPlan,bundle);
             }
 
+        });
+        FloatingActionButton floatingActionButton=view.findViewById(R.id.floatingActionButton2);
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try{
+                    System.out.println("削除します");
+                    Iterator<Integer> it=mAdapter.getSelectedPosition().iterator();
+                    while(it.hasNext()){
+                        Integer posi=it.next();
+                        Plan dPlan=mAdapter.getPlanAtPosition(posi);
+                        mPlanViewModel.deletePlan(dPlan);
+                        myDataset.remove(posi);
+                        mAdapter.notifyItemRemoved(posi);
+                    }
+                }catch (NullPointerException e){
+                    System.out.println(e);
+                }
+                mAdapter.clearList();
+            }
         });
         return view;
     }
