@@ -18,7 +18,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.example.prototype2.Calendar.PlanListAdapter;
 import com.example.prototype2.R;
@@ -127,7 +126,18 @@ public class ToDoContentsFragment extends Fragment {
                 SharedPreferences data = getActivity().getSharedPreferences("pref", Context.MODE_PRIVATE);
                 Gson gson = new Gson();
                 Bundle bundle=new Bundle();
-                bundle.putString("category",(String)gson.fromJson(data.getString("category",""), ArrayList.class).get(page-1));
+                Plan plan =mAdapter.getCurrent();
+                bundle.putString("planName",plan.getPlanName());
+                bundle.putInt("year",plan.getYear());
+                bundle.putInt("month",plan.getMonth());
+                bundle.putInt("day",plan.getDay());
+                bundle.putInt("hour",plan.getHours());
+                bundle.putInt("minute",plan.getMinute());
+                bundle.putString("category",plan.getCategory());
+                bundle.putString("notification",plan.getNotification());
+                bundle.putString("memo",plan.getMemo());
+                bundle.putInt("id",mAdapter.getCurrentId());
+                bundle.putInt("access",2);
                 Navigation.findNavController(view).navigate(R.id.action_toDoFragment_to_editPlan,bundle);
             }
         });
@@ -137,27 +147,10 @@ public class ToDoContentsFragment extends Fragment {
         SharedPreferences data = getActivity().getSharedPreferences("pref", Context.MODE_PRIVATE);
         Gson gson = new Gson();
 
-        mPlanViewModel.getPlanList().observe(getViewLifecycleOwner(), new Observer<List<Plan>>() {
+        mPlanViewModel.getByCategory((String)gson.fromJson(data.getString("category",""), ArrayList.class).get(page-1)).observe(getViewLifecycleOwner(), new Observer<List<Plan>>() {
             @Override
-            public void onChanged(@Nullable final List<Plan> plans) {
-                // Update the cached copy of the words in the adapter.
-                //カテゴリごとの予定を表示
-                List<Plan> rPlans=plans;
-                Iterator it = rPlans.iterator();
-                while(it.hasNext()){
-                    Plan plan=(Plan)it.next();
-                    System.out.println("対象の予定:"+plan.getPlanName());
-                    System.out.println("対象の予定のカテゴリ:"+plan.getCategory());
-                    System.out.println("そのページのカテゴリ:"+gson.fromJson(data.getString("category",""), ArrayList.class).get(page-1));
-                    System.out.println(plan.getCategory().equals(gson.fromJson(data.getString("category",""), ArrayList.class).get(page-1)));
-                    if (plan.getCategory().equals(gson.fromJson(data.getString("category",""), ArrayList.class).get(page-1))) {
-
-                    } else {
-                        System.out.println(plan.getPlanName() + " remove");
-                        it.remove();
-                    }
-                }
-                mAdapter.setPlans(rPlans);
+            public void onChanged(List<Plan> plans) {
+                mAdapter.setPlans(plans);
             }
         });
 
@@ -190,7 +183,27 @@ public class ToDoContentsFragment extends Fragment {
                     }
                 });
         mIth.attachToRecyclerView(recyclerView);
-
+        View view1 = inflater.inflate(R.layout.fragment_to_do, container, true);
+        FloatingActionButton floatingActionButton=view.findViewById(R.id.floatingActionButtonT3);
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try{
+                    System.out.println("削除します");
+                    Iterator<Integer> it=mAdapter.getSelectedPosition().iterator();
+                    while(it.hasNext()){
+                        Integer posi=it.next();
+                        Plan dPlan=mAdapter.getPlanAtPosition(posi);
+                        mPlanViewModel.deletePlan(dPlan);
+                        myDataset.remove(posi);
+                        mAdapter.notifyItemRemoved(posi);
+                    }
+                }catch (NullPointerException e){
+                    System.out.println(e);
+                }
+                mAdapter.clearList();
+            }
+        });
         return view;
     }
 

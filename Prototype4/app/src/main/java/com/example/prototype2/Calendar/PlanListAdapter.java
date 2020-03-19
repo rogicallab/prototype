@@ -1,4 +1,4 @@
-package com.example.prototype2;
+package com.example.prototype2.Calendar;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.prototype2.R;
 import com.example.prototype2.Room.Plan;
 
 import java.util.ArrayList;

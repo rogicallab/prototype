@@ -13,6 +13,9 @@ import androidx.navigation.NavDestination;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
+import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.PreferenceManager;
+import androidx.preference.PreferenceScreen;
 
 import android.app.Activity;
 import android.content.ClipData;
@@ -28,6 +31,7 @@ import android.view.View;
 
 
 import com.example.prototype2.Calendar.CalendarFragment;
+import com.example.prototype2.Setting.ColorSetting;
 import com.example.prototype2.ToDo.ToDoContentsFragment;
 import com.example.prototype2.ToDo.ToDoFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -221,6 +225,21 @@ public class MainActivity extends AppCompatActivity implements ToDoFragment.OnFr
                 return super.onOptionsItemSelected(item);
 
         }
+    }
+    @Override
+    protected void onStart(){
+        super.onStart();
+        // レイアウトルートの背景をテーマ設定の値によって変更
+        SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        switch (defaultSharedPreferences.getString("preference_theme", getString(R.string.default_value_preference_theme))) {
+            case "light":
+                setTheme(R.style.AppTheme);
+                break;
+            case "dark":
+                setTheme(R.style.AppThemeDark);
+                break;
+        }
+
     }
 
 //    @Override

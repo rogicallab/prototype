@@ -64,9 +64,6 @@ public abstract class PlanRoomDatabase extends RoomDatabase {
                 // If you want to start with more words, just add them.
                 PlanDao dao = INSTANCE.wordDao();
                 dao.deleteAll();
-
-                Plan plan=new Plan("鼻くそ","汚い",3000,48,12,33,77,"ホジホジホジホジホジホジ");
-                dao.insert(plan);
             });
         }
     };

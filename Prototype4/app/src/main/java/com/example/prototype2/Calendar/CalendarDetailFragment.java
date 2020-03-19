@@ -1,4 +1,4 @@
-package com.example.prototype2;
+package com.example.prototype2.Calendar;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -18,8 +18,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.prototype2.Calendar.CalendarDetailFragmentArgs;
+import com.example.prototype2.R;
 import com.example.prototype2.Room.Plan;
+import com.example.prototype2.sharedViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
 
@@ -90,8 +91,6 @@ public class CalendarDetailFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_calendar_detail, container, false);
-
-        int page = getArguments().getInt("page",0);
         TextView textView = view.findViewById(R.id.textView2);
         textView.setText(year + "年" + (1+month) + "月" + day + "日");
 
@@ -121,6 +120,7 @@ public class CalendarDetailFragment extends Fragment {
                 bundle.putInt("day",plan.getDay());
                 bundle.putInt("hour",plan.getHours());
                 bundle.putInt("minute",plan.getMinute());
+                bundle.putString("category",plan.getCategory());
                 bundle.putString("notification",plan.getNotification());
                 bundle.putString("memo",plan.getMemo());
                 bundle.putInt("id",mAdapter.getCurrentId());
@@ -134,22 +134,13 @@ public class CalendarDetailFragment extends Fragment {
 
 //        //ViewModelと対応づける
         mPlanViewModel = new ViewModelProvider(this).get(sharedViewModel.class);
-        if(page!=-1){
-        SharedPreferences data = getActivity().getSharedPreferences("pref", Context.MODE_PRIVATE);
-        Gson gson = new Gson();
-        mPlanViewModel.getByCategory((String)gson.fromJson(data.getString("category",""), ArrayList.class).get(page-1)).observe(getViewLifecycleOwner(), new Observer<List<Plan>>() {
-            @Override
-            public void onChanged(List<Plan> plans) {
-                mAdapter.setPlans(plans);
-            }
-        });}else{
             mPlanViewModel.getByDate(year,month,day).observe(getViewLifecycleOwner(), new Observer<List<Plan>>() {
                 @Override
                 public void onChanged(List<Plan> plans) {
                     mAdapter.setPlans(plans);
                 }
             });
-        }
+
 
 
         //スワイプなど

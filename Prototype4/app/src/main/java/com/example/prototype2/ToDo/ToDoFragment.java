@@ -8,6 +8,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.navigation.Navigation;
 import androidx.viewpager.widget.ViewPager;
 
@@ -16,13 +17,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.prototype2.Calendar.PlanListAdapter;
 import com.example.prototype2.R;
+import com.example.prototype2.Room.Plan;
 import com.example.prototype2.sharedViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import static androidx.fragment.app.FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT;
 
@@ -40,6 +45,10 @@ public class ToDoFragment extends Fragment implements ViewPager.OnPageChangeList
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private String selectedTabName;
+    private List<Plan> myDataset = new ArrayList<>();
+    final PlanListAdapter mAdapter=new PlanListAdapter(myDataset);
+    private sharedViewModel mPlanViewModel;
 
     public ToDoFragment() {
         // Required empty public constructor
@@ -90,7 +99,7 @@ public class ToDoFragment extends Fragment implements ViewPager.OnPageChangeList
         View view = inflater.inflate(R.layout.fragment_to_do, container, false);
         TabLayout tabLayout = (TabLayout)view.findViewById(R.id.tabs);
         ViewPager viewPager = (ViewPager)view.findViewById(R.id.pager);
-        FragmentPagerAdapter adapter = new FragmentPagerAdapter(getFragmentManager(),BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+        FragmentStatePagerAdapter adapter = new FragmentStatePagerAdapter(getFragmentManager(),BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
             @NonNull
             @Override
             public Fragment getItem(int position) {
@@ -115,21 +124,47 @@ public class ToDoFragment extends Fragment implements ViewPager.OnPageChangeList
 
         tabLayout.setupWithViewPager(viewPager);
 
+        // 以下現在表示されているタブを取ってくるコード
+        selectedTabName =(String)tabLayout.getTabAt(0).getText();
+        System.out.println("しののん"+selectedTabName);
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                selectedTabName = (String)tab.getText();
+                System.out.println("selectedTabName"+selectedTabName);
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+
+
         //floatingActionButtonの動作
         FloatingActionButton fab = view.findViewById(R.id.floatingActionButtonT);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Bundle bundle=new Bundle();
-//                bundle.putInt("year",year);
-//                bundle.putInt("month",month);
-//                bundle.putInt("day",day);
-//                bundle.putInt("access",0);
+                Bundle bundle=new Bundle();
+                bundle.putInt("access",1);
+                bundle.putString("category",selectedTabName);
 //                Navigation.findNavController(view).navigate(R.id.action_calendarDetailFragment_to_editPlan,bundle);
-                Navigation.findNavController(view).navigate(R.id.action_toDoFragment_to_editPlan);
+                Navigation.findNavController(view).navigate(R.id.action_toDoFragment_to_editPlan,bundle);
             }
 
         });
+//        FloatingActionButton floatingActionButton=view.findViewById(R.id.floatingActionButtonT2);
+//        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//            }
+//        });
 
         return view;
     }

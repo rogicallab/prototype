@@ -29,5 +29,7 @@ public class sharedViewModel extends AndroidViewModel {
     public void insert(Plan plan){mRepository.insert(plan);}
     public void deletePlan(Plan plan){mRepository.deletePlan(plan);}
     public void updatePlan(Plan plan){mRepository.updatePlan(plan);}
+    public LiveData<List<Plan>> getByDate(int year,int month,int day){return mRepository.getByDate(year, month, day);}
+    public LiveData<List<Plan>>getByCategory(String category){return mRepository.getByCategory(category);}
 
 }

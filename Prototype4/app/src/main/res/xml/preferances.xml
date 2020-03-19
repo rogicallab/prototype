@@ -1,4 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+android:title="テーマ設定"
+android:key="preference_appearance">
+<ListPreference
+    android:key="preference_theme"
+    android:title="Favorite Color"
+    android:entries="@array/color_labels"
+    android:entryValues="@array/color_values"
+    android:dialogTitle="Favorite color"
+    android:defaultValue="dark" />
 </PreferenceScreen>

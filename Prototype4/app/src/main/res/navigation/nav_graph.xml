@@ -57,10 +57,18 @@
         android:id="@+id/settingFragment"
         android:name="com.example.prototype2.Setting.SettingFragment"
         android:label="fragment_setting"
-        tools:layout="@layout/fragment_setting" />
+        tools:layout="@layout/fragment_setting" >
+        <action
+            android:id="@+id/action_settingFragment_to_colorSetting"
+            app:destination="@id/colorSetting" />
+    </fragment>
     <fragment
         android:id="@+id/toDoContentsFragment"
         android:name="com.example.prototype2.ToDo.ToDoContentsFragment"
         android:label="fragment_to_do_contents"
         tools:layout="@layout/fragment_to_do_contents" />
+    <fragment
+        android:id="@+id/colorSetting"
+        android:name="com.example.prototype2.Setting.ColorSetting"
+        android:label="ColorSetting" />
 </navigation>
