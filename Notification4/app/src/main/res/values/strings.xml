@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Notification4</string>
+    <string name="create_notifi">１０秒後に通知</string>
+    <string name="remove_notifi">通知をキャンセル</string>
+</resources>
