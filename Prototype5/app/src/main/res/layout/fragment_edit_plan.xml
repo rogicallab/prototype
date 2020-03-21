@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".EditPlan">
+
+    <!-- TODO: Update blank fragment layout -->
+    <ScrollView
+        android:layout_marginTop="55dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".EditPlan">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="40dp">
+
+            <EditText
+                android:id="@+id/titleInput"
+                android:layout_width="match_parent"
+                android:layout_height="62dp"
+                android:layout_marginTop="20dp"
+                android:hint="タイトル..."
+                android:inputType="text"
+                android:textSize="36sp"></EditText>
+
+            <Spinner
+                android:id="@+id/spinner"
+                android:layout_width="match_parent"
+                android:layout_height="68dp"
+                android:layout_marginTop="20dp">
+
+            </Spinner>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="日付"
+                android:textSize="24sp">
+
+            </TextView>
+
+            <Switch
+                android:id="@+id/switch1"
+                android:layout_width="53dp"
+                android:layout_height="wrap_content" />
+
+            <DatePicker
+                android:id="@+id/datePicker"
+                android:layout_width="match_parent"
+                android:layout_height="67dp"
+                android:calendarViewShown="false"
+                android:datePickerMode="spinner">
+
+            </DatePicker>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="36dp"
+                android:text="時間"
+                android:textSize="24sp">
+
+            </TextView>
+
+            <Switch
+                android:id="@+id/switch2"
+                android:layout_width="59dp"
+                android:layout_height="wrap_content" />
+
+            <TimePicker
+                android:id="@+id/timePicker"
+                android:layout_width="match_parent"
+                android:layout_height="71dp"
+                android:timePickerMode="spinner">
+
+            </TimePicker>
+
+            <TextView
+                android:id="@+id/notificationTitle"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="通知"
+                android:textSize="24sp">
+
+            </TextView>
+            <Spinner
+                android:id="@+id/notifications"
+                android:layout_width="match_parent"
+                android:layout_height="58dp"
+                android:hint="選択してください...">
+
+            </Spinner>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:inputType=""
+                android:text="メモ"
+                android:textSize="24sp">
+
+            </TextView>
+
+            <EditText
+                android:id="@+id/memoInput"
+                android:layout_width="match_parent"
+                android:layout_height="136dp">
+
+            </EditText>
+
+            <Button
+                android:id="@+id/createPlan"
+                android:layout_width="385dp"
+                android:layout_height="60dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="80dp"
+                android:text="予定作成"
+                android:textSize="30sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </ScrollView>
+
+</FrameLayout>

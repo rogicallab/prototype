@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/calendarFragment">
+
+    <fragment
+        android:id="@+id/calendarFragment"
+        android:name="com.example.prototype2.Calendar.CalendarFragment"
+        android:label="fragment_calendar"
+        tools:layout="@layout/fragment_calendar" >
+        <action
+            android:id="@+id/action_calendarFragment_to_calendarDetailFragment"
+            app:destination="@id/calendarDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/calendarDetailFragment"
+        android:name="com.example.prototype2.Calendar.CalendarDetailFragment"
+        android:label="fragment_calendar_detail"
+        tools:layout="@layout/fragment_calendar_detail" >
+        <argument
+            android:name="year"
+            app:argType="integer" />
+        <argument
+            android:name="month"
+            app:argType="integer" />
+        <argument
+            android:name="day"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_calendarDetailFragment_to_editPlan"
+            app:destination="@id/editPlan" />
+    </fragment>
+    <fragment
+        android:id="@+id/editPlan"
+        android:name="com.example.prototype2.EditPlan"
+        android:label="fragment_edit_plan"
+        tools:layout="@layout/fragment_edit_plan" >
+        <action
+            android:id="@+id/action_editPlan_to_calendarFragment"
+            app:destination="@id/calendarFragment" />
+        <action
+            android:id="@+id/action_editPlan_to_toDoFragment3"
+            app:destination="@id/toDoFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/toDoFragment"
+        android:name="com.example.prototype2.ToDo.ToDoFragment"
+        android:label="fragment_to_do"
+        tools:layout="@layout/fragment_to_do" >
+        <action
+            android:id="@+id/action_toDoFragment_to_editPlan"
+            app:destination="@id/editPlan" />
+        <action
+            android:id="@+id/action_toDoFragment_to_editTabFragment"
+            app:destination="@id/editTabFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/settingFragment"
+        android:name="com.example.prototype2.Setting.SettingFragment"
+        android:label="fragment_setting"
+        tools:layout="@layout/fragment_setting" >
+        <action
+            android:id="@+id/action_settingFragment_to_colorSetting"
+            app:destination="@id/colorSetting" />
+    </fragment>
+    <fragment
+        android:id="@+id/toDoContentsFragment"
+        android:name="com.example.prototype2.ToDo.ToDoContentsFragment"
+        android:label="fragment_to_do_contents"
+        tools:layout="@layout/fragment_to_do_contents" />
+    <fragment
+        android:id="@+id/colorSetting"
+        android:name="com.example.prototype2.Setting.ColorSetting"
+        android:label="ColorSetting" />
+    <fragment
+        android:id="@+id/editTabFragment"
+        android:name="com.example.prototype2.ToDo.EditTabFragment"
+        android:label="fragment_edit_tab"
+        tools:layout="@layout/fragment_edit_tab" >
+        <action
+            android:id="@+id/action_editTabFragment_to_addTabFragment"
+            app:destination="@id/addTabFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/addTabFragment"
+        android:name="com.example.prototype2.ToDo.AddTabFragment"
+        android:label="fragment_add_tab"
+        tools:layout="@layout/fragment_add_tab" >
+        <action
+            android:id="@+id/action_addTabFragment_to_editTabFragment"
+            app:destination="@id/editTabFragment" />
+    </fragment>
+</navigation>
