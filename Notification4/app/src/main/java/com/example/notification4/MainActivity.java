@@ -43,7 +43,6 @@ public class MainActivity extends AppCompatActivity {
 
                 if(am != null){
                     am.setExact(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),pending);
-
                     // アラームが設定されたことを表示
                     Toast.makeText(getApplicationContext(),"alarm start",Toast.LENGTH_SHORT).show();
 

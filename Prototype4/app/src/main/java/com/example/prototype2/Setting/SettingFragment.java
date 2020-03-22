@@ -24,6 +24,7 @@ public class SettingFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private TextView color;
+    private TextView pp;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -73,6 +74,14 @@ public class SettingFragment extends Fragment {
                 startActivity(intent);
             }
         });
+        pp=view.findViewById(R.id.pp);
+        pp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Navigation.findNavController(view).navigate(R.id.action_settingFragment_to_privacyPolicy);
+            }
+        });
+
         // Inflate the layout for this fragment
         return view;
     }

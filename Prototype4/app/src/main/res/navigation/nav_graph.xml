@@ -61,6 +61,9 @@
         <action
             android:id="@+id/action_settingFragment_to_colorSetting"
             app:destination="@id/colorSetting" />
+        <action
+            android:id="@+id/action_settingFragment_to_privacyPolicy"
+            app:destination="@id/privacyPolicy" />
     </fragment>
     <fragment
         android:id="@+id/toDoContentsFragment"
@@ -71,4 +74,9 @@
         android:id="@+id/colorSetting"
         android:name="com.example.prototype2.Setting.ColorSetting"
         android:label="ColorSetting" />
+    <fragment
+        android:id="@+id/privacyPolicy"
+        android:name="com.example.prototype2.Setting.PrivacyPolicy"
+        android:label="fragment_privacy_policy"
+        tools:layout="@layout/fragment_privacy_policy" />
 </navigation>

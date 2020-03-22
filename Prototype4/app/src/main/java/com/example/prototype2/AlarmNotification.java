@@ -1,4 +1,4 @@
-package com.example.notification4;
+package com.example.prototype2;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -10,16 +10,20 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Build;
 import android.util.Log;
+
+import androidx.annotation.RequiresApi;
 
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 public class AlarmNotification extends BroadcastReceiver {
+    String title ;
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onReceive(Context context, Intent intent){
-        System.out.println(" しののん");
         Log.d("AlarmBroadcastReceiver","onReceive() pid=" + android.os.Process.myPid());
 
         int requestCode = intent.getIntExtra("RequestCode",0);
@@ -29,7 +33,8 @@ public class AlarmNotification extends BroadcastReceiver {
 
         String channelId = "default";
         // app name
-        String title = context.getString(R.string.app_name);
+//        String title = context.getString(R.string.app_name);
+        title=intent.getStringExtra("title");
 
         long currentTime = System.currentTimeMillis();
         SimpleDateFormat dataFormat =

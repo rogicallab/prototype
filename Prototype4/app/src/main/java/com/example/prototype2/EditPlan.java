@@ -1,6 +1,9 @@
 package com.example.prototype2;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
@@ -11,6 +14,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,9 +33,13 @@ import com.example.prototype2.Room.Plan;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+
+import static android.content.Context.ALARM_SERVICE;
 
 
 /**
@@ -77,6 +85,9 @@ public class EditPlan extends Fragment {
     private TimePicker timePicker;
     private Integer hour=-1;
     private Integer minute=-1;
+    private AlarmManager am;
+    private PendingIntent pending;
+    private int requestCode = 1;
 
     private String plantitle="";
     private String memo="";
@@ -118,6 +129,7 @@ public class EditPlan extends Fragment {
         System.out.println("おおおおおおおおおおおお");
         try{
             judge=getArguments().getInt("access");//0:カレンダーからの作成、1:TODOからの作成、2:予定タップで予定変更
+
             if(judge==0||judge==2){
             year = getArguments().getInt("year");
             month = getArguments().getInt("month");
@@ -127,6 +139,7 @@ public class EditPlan extends Fragment {
                 for(int i=0;i<clist.size();i++){
                     if(category.equals(clist.get(i))){
                         cSpinnerPlace=i;
+                        break;
                     }
                 }
             }
@@ -307,6 +320,7 @@ public class EditPlan extends Fragment {
                 notification = (String)spinner.getSelectedItem();
                 System.out.println(notification);
                 if(position!=0){
+                    switch1.setChecked(true);
                     switch2.setChecked(true);
                 }
                 //textView.setText(item);
@@ -347,8 +361,9 @@ public class EditPlan extends Fragment {
 //                            }
 //                        }
                         memo=mMemo.getText().toString();
-                        if(nSpinner.getSelectedItemPosition()!=0&&hour==-1&&minute==-1){
-                            Toast.makeText(getContext(),"時間を選択してください",Toast.LENGTH_LONG).show();
+                        if(nSpinner.getSelectedItemPosition()!=0&&!(switch1.isChecked()&&switch2.isChecked())){
+                            Toast.makeText(getContext(),"日時を選択してください",Toast.LENGTH_LONG).show();
+                            switch1.setChecked(true);
                             switch2.setChecked(true);
                         }else {
                             if (judge != 2) {
@@ -359,11 +374,77 @@ public class EditPlan extends Fragment {
                                 currentPlan.setId(id);
                                 mPlanViewModel.updatePlan(currentPlan);
                             }
+                            if(!notification.equals("選択してください")){
+//                                hour+=1;
+//                                minute-=1;
+                                Calendar calendar = Calendar.getInstance();
+//                                 calendar.setTimeInMillis(System.currentTimeMillis());
+                                calendar.set(year,month,day,hour,(minute-1),0);
+                                switch (notification){
+                                    case "1時間前":
+                                        calendar.add(Calendar.HOUR,-1);
+                                        System.out.println(year+" "+month+" "+day+" "+hour+" "+(minute-1)+"の１時間前に通知");
+                                        break;
+                                    case "2時間前":
+                                        calendar.add(Calendar.HOUR,-2);
+                                        break;
+                                    case "1日前":
+                                        calendar.add(Calendar.DATE,-1);
+                                        System.out.println(year+" "+month+" "+day+" "+hour+" "+(minute-1)+"の1日前に通知");
+                                        break;
+                                    case"2日前":
+                                        calendar.add(Calendar.DATE,-2);
+                                        break;
+                                    case"1週間前":
+                                        calendar.add(Calendar.DATE,-7);
+                                        System.out.println(year+" "+month+" "+day+" "+hour+" "+(minute-1)+"の１週間前に通知");
+                                        break;
+                                    default:
+                                        break;
+                                }
+
+                                Intent intent = new Intent(getActivity().getApplicationContext(), AlarmNotification.class);
+                                intent.putExtra("RequestCode",requestCode);
+                                intent.putExtra("title",plantitle);
+
+                                pending = PendingIntent.getBroadcast(getActivity().getApplicationContext(),requestCode,intent,0);
+
+                                // アラームをセット
+                                am = (AlarmManager)getActivity().getSystemService(ALARM_SERVICE);
+
+                                if(am != null){
+                                    am.setExact(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),pending);
+                                    // アラームが設定されたことを表示
+                                    Toast.makeText(getActivity().getApplicationContext(),"alarm start",Toast.LENGTH_SHORT).show();
+
+                                    Log.d("debug", "start");
+                                }
+
+                            }else{
+                                if(judge==2){
+                                Intent indent = new Intent(getActivity().getApplicationContext(), AlarmNotification.class);
+                                PendingIntent pending = PendingIntent.getBroadcast(
+                                        getActivity().getApplicationContext(), requestCode, indent, 0);
+
+                                // アラームを解除する
+                                AlarmManager am = (AlarmManager)getActivity().
+                                        getSystemService(ALARM_SERVICE);
+                                if (am != null) {
+                                    am.cancel(pending);
+                                    Toast.makeText(getActivity().getApplicationContext(),
+                                            "alarm cancel", Toast.LENGTH_SHORT).show();
+                                    Log.d("debug", "cancel");
+                                }
+                                else{
+                                    Log.d("debug", "null");
+                                }}
+                            }
+                            }
 
                             Navigation.findNavController(view).navigate(R.id.action_editPlan_to_calendarFragment);
                         }
                     }
-                }
+
 
             });
         }catch (NullPointerException e){
