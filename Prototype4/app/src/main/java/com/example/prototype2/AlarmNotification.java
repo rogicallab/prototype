@@ -20,6 +20,7 @@ import java.util.Locale;
 
 public class AlarmNotification extends BroadcastReceiver {
     String title ;
+    String GROUP_KEY="com.android.example.WORK_EMAIL";
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -62,7 +63,7 @@ public class AlarmNotification extends BroadcastReceiver {
         channel.setSound(defaultSoundUri, null);
         channel.setShowBadge(true);
 
-        if(notificationManager != null){
+//        if(notificationManager != null){
             notificationManager.createNotificationChannel(channel);
 
             Notification notification = new Notification.Builder(context, channelId)
@@ -73,11 +74,12 @@ public class AlarmNotification extends BroadcastReceiver {
                     .setAutoCancel(true)
                     .setContentIntent(pendingIntent)
                     .setWhen(System.currentTimeMillis())
+                    .setGroup(GROUP_KEY)
                     .build();
 
             // 通知
             notificationManager.notify(R.string.app_name, notification);
 
-        }
+//        }
     }
 }

@@ -24,6 +24,7 @@ public class PlanListAdapter  extends RecyclerView.Adapter<PlanListAdapter.PlanV
     private int id;
     private List<Plan>splans;
     private List<Integer>positions=new ArrayList<>();
+    private onItemClickListner listner;
     // Provide a reference to the views for each data item
 // Complex data items may need more than one view per item, and
 // you provide access to all the views for a data item in a view holder
@@ -92,7 +93,7 @@ public class PlanListAdapter  extends RecyclerView.Adapter<PlanListAdapter.PlanV
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    listener.onClick(v);
+                    listner.onClick(v,mPlans.get(position));
                 }
             });
         }else{
@@ -101,18 +102,19 @@ public class PlanListAdapter  extends RecyclerView.Adapter<PlanListAdapter.PlanV
 
     }
 
-    public Plan getCurrent(){
-        return current;
-    }
+
     public int getCurrentId(){
         return current.getId();
     }
-    public void setOnItemClickListener(View.OnClickListener listener) {
-        this.listener = listener;
+    public void setOnItemClickListener(onItemClickListner listener) {
+        this.listner = listener;
     }
     public void setPlans(List<Plan> plans){
         mPlans=plans;
         notifyDataSetChanged();
+    }
+    public interface onItemClickListner{
+        void onClick(View view,Plan plan);
     }
     public Plan getPlanAtPosition (int position) {
         return mPlans.get(position);

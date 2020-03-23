@@ -119,14 +119,12 @@ public class ToDoContentsFragment extends Fragment {
 //        mAdapter = new PlanListAdapter(myDataset);
         recyclerView.setAdapter(mAdapter);
         //クリックイベント
-        mAdapter.setOnItemClickListener(new View.OnClickListener() {
+        mAdapter.setOnItemClickListener(new PlanListAdapter.onItemClickListner() {
             @Override
-            public void onClick(View v) {
-                //Navigation.findNavController(view).navigate(R.id.action_toDoFragment_to_editPlan);
+            public void onClick(View view, Plan plan) {
                 SharedPreferences data = getActivity().getSharedPreferences("pref", Context.MODE_PRIVATE);
                 Gson gson = new Gson();
                 Bundle bundle=new Bundle();
-                Plan plan =mAdapter.getCurrent();
                 bundle.putString("planName",plan.getPlanName());
                 bundle.putInt("year",plan.getYear());
                 bundle.putInt("month",plan.getMonth());

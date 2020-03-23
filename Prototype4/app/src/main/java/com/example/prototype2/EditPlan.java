@@ -407,7 +407,7 @@ public class EditPlan extends Fragment {
                                 intent.putExtra("RequestCode",requestCode);
                                 intent.putExtra("title",plantitle);
 
-                                pending = PendingIntent.getBroadcast(getActivity().getApplicationContext(),requestCode,intent,0);
+                                pending = PendingIntent.getBroadcast(getActivity().getApplicationContext(),requestCode,intent,PendingIntent.FLAG_CANCEL_CURRENT);
 
                                 // アラームをセット
                                 am = (AlarmManager)getActivity().getSystemService(ALARM_SERVICE);
