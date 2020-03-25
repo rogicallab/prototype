@@ -69,14 +69,11 @@ public class PlanListAdapter  extends RecyclerView.Adapter<PlanListAdapter.PlanV
                 public void onClick(View v) {
                     try {
                         int i=0;
-                        System.out.println(current.getPlanName()+"削除要員 "+position);
                         Iterator it =positions.iterator();
                         while(it.hasNext()){
                             Integer posi=(Integer)it.next();
-                            System.out.println(posi+"posi");
                             if(posi==position){
                                 it.remove();
-                                System.out.println(posi+"削除");
                                 i++;
                             }
                         }

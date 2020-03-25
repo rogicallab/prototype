@@ -77,65 +77,7 @@ public class MainActivity extends AppCompatActivity implements ToDoFragment.OnFr
                 break;
         }
 
-
-//        // bottomNavigationViewのセッティング
-//        BottomNavigationView navView = findViewById(R.id.nav_view);
-////        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-////                R.id.calendarFragment, R.id.toDoFragment, R.id.settingFragment)
-////                .build();
-//        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-//        //NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-//        // 押されたことがわかる？
-//        navView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-//            @Override
-//            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-//                System.out.println("押された");
-//                return true;
-//            }
-//        });
-//
-////        navView.setOnClickListener(new View.OnClickListener(){
-////            @Override
-////            public void onClick(View v){
-////                System.out.println("View:"+v);
-////            }
-////        });
-//        NavigationUI.setupWithNavController(navView, navController);
-//
-
-//
-//        View item = findViewById(R.id.calendarFragment);
-//        item.setOnClickListener(new View.OnClickListener(){
-//            @Override
-//            public void onClick(View view){
-//                System.out.println("押された");
-//                itemId = item.getId();
-//                System.out.println("ViewId:"+itemId);
-//                invalidateOptionsMenu();
-//            }
-//        });
-//        View toDoItem = findViewById(R.id.toDoFragment);
-//        toDoItem.setOnClickListener(new View.OnClickListener(){
-//            @Override
-//            public void onClick(View view){
-//                System.out.println("押された");
-//                itemId = toDoItem.getId();
-//                System.out.println("ViewId:"+itemId);
-//                invalidateOptionsMenu();
-//            }
-//        });
-//        View settingItem = findViewById(R.id.settingFragment);
-//        settingItem.setOnClickListener(new View.OnClickListener(){
-//            @Override
-//            public void onClick(View view){
-//                System.out.println("押された");
-//                itemId = settingItem.getId();
-//                System.out.println("ViewId:"+itemId);
-//                invalidateOptionsMenu();
-//            }
-//        });
-
-        // 新しいbottomNavigationのセッティング
+        // bottomNavigationのセッティング
         BottomNavigationView navView = findViewById(R.id.nav_view);
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         View calendarItem = findViewById(R.id.calendarFragment);
@@ -182,19 +124,6 @@ public class MainActivity extends AppCompatActivity implements ToDoFragment.OnFr
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
 
-        // 以下たぶんいらない
-//        AppBarConfiguration appBarConfiguration2 =
-//                new AppBarConfiguration.Builder(navController.getGraph()).build();
-//        Toolbar toolbar = findViewById(R.id.toolbar);
-//        toolbar.setNavigationIcon(R.drawable.add_tab_icon);
-//        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                System.out.println("呼ばれてんねぇ");
-//            }
-//        });
-//        NavigationUI.setupWithNavController(toolbar, navController);
-
 
     }
     @Override
@@ -240,6 +169,7 @@ public class MainActivity extends AppCompatActivity implements ToDoFragment.OnFr
                 // User chose the "Favorite" action, mark the current item
                 // as a favorite...
                 System.out.println("タブ追加ボタンが押された");
+                Navigation.findNavController(this,R.id.nav_host_fragment).navigate(R.id.editTabFragment);
                 return true;
 
             default:
@@ -274,20 +204,6 @@ public class MainActivity extends AppCompatActivity implements ToDoFragment.OnFr
 
     }
 
-//    @Override
-//    public boolean onNavigationItemSelected(@NonNull MenuItem item){
-//
-//    }
 
-    // bottom navigationのlistenerの実装
-//    private void () {
-//        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-//        navigationView.setNavigationItemSelectedListener(new View.OnClickListener(){
-//            @Override
-//            public void onClick(View v){
-//                System.out.println("View:"+v);
-//            }
-//        });
-//    }
 
 }

@@ -52,6 +52,9 @@
         <action
             android:id="@+id/action_toDoFragment_to_editPlan"
             app:destination="@id/editPlan" />
+        <action
+            android:id="@+id/action_toDoFragment_to_editTabFragment"
+            app:destination="@id/editTabFragment" />
     </fragment>
     <fragment
         android:id="@+id/settingFragment"
@@ -79,4 +82,22 @@
         android:name="com.example.prototype2.Setting.PrivacyPolicy"
         android:label="fragment_privacy_policy"
         tools:layout="@layout/fragment_privacy_policy" />
+    <fragment
+        android:id="@+id/addTabFragment"
+        android:name="com.example.prototype2.ToDo.AddTabFragment"
+        android:label="fragment_add_tab"
+        tools:layout="@layout/fragment_add_tab" >
+        <action
+            android:id="@+id/action_addTabFragment_to_editTabFragment"
+            app:destination="@id/editTabFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/editTabFragment"
+        android:name="com.example.prototype2.ToDo.EditTabFragment"
+        android:label="fragment_edit_tab"
+        tools:layout="@layout/fragment_edit_tab" >
+        <action
+            android:id="@+id/action_editTabFragment_to_addTabFragment"
+            app:destination="@id/addTabFragment" />
+    </fragment>
 </navigation>

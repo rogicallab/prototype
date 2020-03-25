@@ -49,6 +49,8 @@ public class ToDoFragment extends Fragment implements ViewPager.OnPageChangeList
     private List<Plan> myDataset = new ArrayList<>();
     final PlanListAdapter mAdapter=new PlanListAdapter(myDataset);
     private sharedViewModel mPlanViewModel;
+    private static Context context = null;
+    private static View todoView;
 
     public ToDoFragment() {
         // Required empty public constructor
@@ -97,6 +99,8 @@ public class ToDoFragment extends Fragment implements ViewPager.OnPageChangeList
         // Inflate the layout for this fragment
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_to_do, container, false);
+        context=getActivity();
+        todoView=view;
         TabLayout tabLayout = (TabLayout)view.findViewById(R.id.tabs);
         ViewPager viewPager = (ViewPager)view.findViewById(R.id.pager);
         FragmentStatePagerAdapter adapter = new FragmentStatePagerAdapter(getFragmentManager(),BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
@@ -111,13 +115,23 @@ public class ToDoFragment extends Fragment implements ViewPager.OnPageChangeList
             public CharSequence getPageTitle(int position){
                 // カテゴリのデータ
                 //return ToDoPlan.category.get(position);
-                return sharedViewModel.category.get(position);
-            }
+                SharedPreferences data = context.getSharedPreferences("pref", Context.MODE_PRIVATE);
+                Gson gson = new Gson();
+                ArrayList<String> arrayList = gson.fromJson(data.getString("category",""), ArrayList.class);
+                return arrayList.get(position);            }
 
             @Override
-            public int getCount() {
-                return sharedViewModel.category.size();
+            public int getCount(){
+                SharedPreferences data = context.getSharedPreferences("pref", Context.MODE_PRIVATE);
+                Gson gson = new Gson();
+                ArrayList<String> arrayList = gson.fromJson(data.getString("category",""), ArrayList.class);
+                return arrayList.size();
             }
+            @Override
+            public int getItemPosition(Object item){
+                return POSITION_UNCHANGED;
+            }
+
         };
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(this);
@@ -153,18 +167,11 @@ public class ToDoFragment extends Fragment implements ViewPager.OnPageChangeList
                 Bundle bundle=new Bundle();
                 bundle.putInt("access",1);
                 bundle.putString("category",selectedTabName);
-//                Navigation.findNavController(view).navigate(R.id.action_calendarDetailFragment_to_editPlan,bundle);
                 Navigation.findNavController(view).navigate(R.id.action_toDoFragment_to_editPlan,bundle);
             }
 
         });
-//        FloatingActionButton floatingActionButton=view.findViewById(R.id.floatingActionButtonT2);
-//        floatingActionButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//            }
-//        });
+
 
         return view;
     }

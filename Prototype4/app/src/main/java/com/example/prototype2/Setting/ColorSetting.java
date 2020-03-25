@@ -84,11 +84,5 @@ public class ColorSetting extends PreferenceFragmentCompat {
         });
     }
 
-//    @Override
-//    public void onResume() {
-//        super.onResume();
-//        // ActionBarのタイトルに現在表示中のPreferenceScreenのタイトルをセット
-//        String rootKey = getArguments().getString(PreferenceFragmentCompat.ARG_PREFERENCE_ROOT);
-//        getActivity().setTitle(findPreference(rootKey).getTitle());
-//    }
+
 }

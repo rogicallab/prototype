@@ -106,29 +106,9 @@ public class CalendarDetailFragment extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
 
         // specify an adapter (see also next example)
-//        mAdapter = new PlanListAdapter(myDataset);
         recyclerView.setAdapter(mAdapter);
+
         //クリックイベント
-//        mAdapter.setOnItemClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Bundle bundle=new Bundle();
-//                Plan plan =mAdapter.getCurrent();
-//                bundle.putString("planName",plan.getPlanName());
-//                bundle.putInt("year",plan.getYear());
-//                bundle.putInt("month",plan.getMonth());
-//                bundle.putInt("day",plan.getDay());
-//                bundle.putInt("hour",plan.getHours());
-//                bundle.putInt("minute",plan.getMinute());
-//                bundle.putString("category",plan.getCategory());
-//                bundle.putString("notification",plan.getNotification());
-//                bundle.putString("memo",plan.getMemo());
-//                bundle.putInt("id",mAdapter.getCurrentId());
-//                System.out.println(mAdapter.getCurrentId()+" IDです");
-//                bundle.putInt("access",2);
-//                Navigation.findNavController(view).navigate(R.id.action_calendarDetailFragment_to_editPlan,bundle);
-//            }
-//        });
         mAdapter.setOnItemClickListener(new PlanListAdapter.onItemClickListner() {
             @Override
             public void onClick(View view, Plan plan) {
@@ -143,7 +123,6 @@ public class CalendarDetailFragment extends Fragment {
                 bundle.putString("notification",plan.getNotification());
                 bundle.putString("memo",plan.getMemo());
                 bundle.putInt("id",mAdapter.getCurrentId());
-                System.out.println(mAdapter.getCurrentId()+" IDです");
                 bundle.putInt("access",2);
                 Navigation.findNavController(view).navigate(R.id.action_calendarDetailFragment_to_editPlan,bundle);
             }
@@ -211,7 +190,6 @@ public class CalendarDetailFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 try{
-                    System.out.println("削除します");
                     Iterator<Integer> it=mAdapter.getSelectedPosition().iterator();
                     while(it.hasNext()){
                         Integer posi=it.next();

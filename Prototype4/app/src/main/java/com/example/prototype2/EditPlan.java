@@ -184,14 +184,6 @@ public class EditPlan extends Fragment {
                              Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.fragment_edit_plan, container, false);
         mPlanViewModel = new ViewModelProvider(this).get(sharedViewModel.class);
-//        if(judge==2) {
-//            mPlanViewModel.findById(id).observe(getViewLifecycleOwner(), new Observer<Plan>() {
-//                @Override
-//                public void onChanged(Plan plan) {
-//                    setAll(plan, plan.getCategory(), plan.getYear(), plan.getMonth(), plan.getDay(), plan.getHours(), plan.getMinute(), plan.getNotification(), plan.getMemo());
-//                }
-//            });
-//        }
 
         //タイトル
         mTitle=view.findViewById(R.id.titleInput);
